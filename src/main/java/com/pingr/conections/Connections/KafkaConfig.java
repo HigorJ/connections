@@ -25,6 +25,7 @@ public class KafkaConfig {
     @Bean
     public Map<String, Object> consumerConfig() {
         HashMap<String, Object> props = new HashMap<>();
+
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, this.bootstrapServers);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
@@ -37,7 +38,7 @@ public class KafkaConfig {
         return new DefaultKafkaConsumerFactory<>(
                 consumerConfig(),
                 new StringDeserializer(),
-                new org.springframework.kafka.support.serializer.JsonDeserializer<>(Account.class)
+                new org.springframework.kafka.support.serializer.JsonDeserializer<>(Account.class, false)
         );
     }
 

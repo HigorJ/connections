@@ -1,13 +1,13 @@
 package com.pingr.conections.Connections;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.hibernate.annotations.*;
 
-import javax.persistence.Column;
+import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @JsonSerialize
@@ -22,13 +22,18 @@ public class Account {
     )
     private String username;
 
-    @OneToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Account> friends = new HashSet<>();
 
     public Account(Long id, String username, Set<Account> friends) {
         this.id = id;
         this.username = username;
         this.friends = friends;
+    }
+
+    public Account(Long id, String username) {
+        this.id = id;
+        this.username = username;
     }
 
     public Account() {
@@ -52,9 +57,10 @@ public class Account {
 
     public Set<Account> getFriends() {
         HashSet<Account> _friends = new HashSet<>();
+        Set<Account> friends = this.friends;
 
-        for (Account friend: this.friends) {
-            _friends.add(new Account(friend.getId(), friend.getUsername(), new HashSet<>()));
+        for (Account friend: friends) {
+            _friends.add(new Account(friend.getId(), friend.getUsername()));
         }
 
         return _friends;
@@ -68,8 +74,8 @@ public class Account {
     public String toString() {
         return "Account{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
-                ", friends=" + friends +
-                '}';
+                ", username=" + username +
+                ", friends=" + friends.stream().map(friend -> friend.getUsername()).collect(Collectors.toList()) +
+                "}";
     }
 }

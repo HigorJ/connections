@@ -8,9 +8,10 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       bootstrap-servers: localhost:9092
+
   datasource:
     username: root
-    url: jdbc:postgresql://localhost:5432/accounts
+    url: jdbc:postgresql://localhost:5433/accounts
     password: secret
   jpa:
     properties:
@@ -22,8 +23,15 @@ spring:
     show-sql: 'true'
 
 topic:
-  accounts: new_accounts_topic
+  accounts:
+    account-created: new_accounts_topic
+    account-updated: update_accounts_topic
+    account-deleted: delete_accounts_topic
+  connections:
+    new-following: new_following_topic
+    friendship-unmade: friendship_unmade_topic
 
 server:
+  port: 8081
   error:
     include-message: always
